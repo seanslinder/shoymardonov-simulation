@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Моделирование полёта в атмосфере</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Моделирование полёта тела в атмосфере</h1>
+
+      <div class="controls">
+        <div class="input-group">
+          <label>v₀, м/с</label>
+          <input type="number" id="v0" value="50" step="1" min="1" />
+        </div>
+        <div class="input-group">
+          <label>m, кг</label>
+          <input type="number" id="mass" value="1.0" step="0.1" min="0.1" />
+        </div>
+        <div class="input-group">
+          <label>α, °</label>
+          <input
+            type="number"
+            id="angle"
+            value="45"
+            step="1"
+            min="1"
+            max="89"
+          />
+        </div>
+        <div class="input-group">
+          <label>Δt, c</label>
+          <input type="number" id="dt" step="0.01" min="0.001" value="0.1" />
+        </div>
+        <button id="runBtn">Расчёт</button>
+        <button id="clearBtn">Очистить</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="trajectoryChart"></canvas>
+      </div>
+
+      <div class="table-container">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Δt, c</th>
+              <th>v₀, м/с</th>
+              <th>m, кг</th>
+              <th>α, °</th>
+              <th>Distance, м</th>
+              <th>Max height, м</th>
+              <th>Speed end, м/с</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
