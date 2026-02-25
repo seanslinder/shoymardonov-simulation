@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа №2: Теплопроводность (неявная схема)</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Лабораторная работа №2: Одномерное уравнение теплопроводности</h1>
+      <div class="params">
+        <div class="param-item"><label>ρ =</label><span>7800 кг/м³</span></div>
+        <div class="param-item">
+          <label>c =</label><span>460 Дж/(кг·°С)</span>
+        </div>
+        <div class="param-item">
+          <label>λ =</label><span>46 Вт/(м·°С)</span>
+        </div>
+        <div class="param-item"><label>L =</label><span>0.1 м</span></div>
+        <div class="param-item">
+          <label>T<sub>0</sub> =</label><span>100 °C</span>
+        </div>
+        <div class="param-item">
+          <label>T<sub>left</sub> = T<sub>right</sub> =</label><span>0 °C</span>
+        </div>
+        <div class="param-item">
+          <label>t<sub>max</sub> =</label><span>2 с</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="select-group">
+          <label>Шаг по времени τ, с</label>
+          <select id="tauSelect">
+            <option value="0.1">0.1</option>
+            <option value="0.01">0.01</option>
+            <option value="0.001" selected>0.001</option>
+            <option value="0.0001">0.0001</option>
+          </select>
+        </div>
+        <div class="select-group">
+          <label>Шаг по пространству h, м</label>
+          <select id="hSelect">
+            <option value="0.1">0.1</option>
+            <option value="0.01">0.01</option>
+            <option value="0.001" selected>0.001</option>
+            <option value="0.0001">0.0001</option>
+          </select>
+        </div>
+        <button id="runBtn" class="btn-primary">🚀 Рассчитать</button>
+        <button id="clearBtn" class="btn-secondary">🧹 Очистить таблицы</button>
+      </div>
+
+      <div id="warning" class="warning"></div>
+
+      <div class="chart-container">
+        <canvas id="tempChart"></canvas>
+      </div>
+
+      <div class="tables">
+        <div class="table-wrapper">
+          <h3>Температура в центре пластины (x = L/2), °C</h3>
+          <table id="tempTable">
+            <thead>
+              <tr>
+                <th>τ \\ h</th>
+                <th>0.1</th>
+                <th>0.01</th>
+                <th>0.001</th>
+                <th>0.0001</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>0.1</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.01</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.001</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.0001</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrapper">
+          <h3>Реальное время расчёта, с</h3>
+          <table id="timeTable">
+            <thead>
+              <tr>
+                <th>τ \\ h</th>
+                <th>0.1</th>
+                <th>0.01</th>
+                <th>0.001</th>
+                <th>0.0001</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>0.1</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.01</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.001</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+              <tr>
+                <th>0.0001</th>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+                <td class="empty">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="footer">
+        Неявная конечно-разностная схема, решение методом прогонки.
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
