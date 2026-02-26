@@ -87,7 +87,7 @@ function setTableCell(tbody, rowIdx, colIdx, value, isTime = false) {
   if (!row) return;
   const cell = row.cells[colIdx + 1];
   if (cell) {
-    cell.textContent = isTime ? value.toFixed(4) : value.toFixed(2);
+    cell.textContent = isTime ? value.toFixed(4) : value.toFixed(10);
     cell.classList.remove("empty");
   }
 }
