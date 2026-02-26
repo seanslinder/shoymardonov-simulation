@@ -1,14 +1,14 @@
-// Физические параметры (по условию)
-const rho = 7800.0; // кг/м³
-const c = 460.0; // Дж/(кг·°С)
-const lambda = 46.0; // Вт/(м·°С)
-const L = 0.1; // м (толщина пластины)
-const T0 = 100.0; // начальная температура, °C
-const Tleft = 0.0;
-const Tright = 0.0;
-const t_end = 2.0; // время моделирования, с
+// Элементы ввода параметров
+const rhoInput = document.getElementById("rho");
+const cInput = document.getElementById("c");
+const lambdaInput = document.getElementById("lambda");
+const LInput = document.getElementById("L");
+const T0Input = document.getElementById("T0");
+const TleftInput = document.getElementById("Tleft");
+const TrightInput = document.getElementById("Tright");
+const tEndInput = document.getElementById("t_end");
 
-// Дискретные значения шагов (в порядке возрастания)
+// Дискретные значения шагов
 const tauValues = [0.1, 0.01, 0.001, 0.0001];
 const hValues = [0.1, 0.01, 0.001, 0.0001];
 
@@ -16,7 +16,7 @@ const hValues = [0.1, 0.01, 0.001, 0.0001];
 const tauIndices = { 0.1: 0, 0.01: 1, 0.001: 2, 0.0001: 3 };
 const hIndices = { 0.1: 0, 0.01: 1, 0.001: 2, 0.0001: 3 };
 
-// Таблицы (tbody)
+// Таблицы
 const tempTbody = document.querySelector("#tempTable tbody");
 const timeTbody = document.querySelector("#timeTable tbody");
 
@@ -52,8 +52,7 @@ function initChart() {
         },
         y: {
           title: { display: true, text: "T, °C" },
-          min: 0,
-          max: 100,
+          // min: 0, max: 100  // убрали фиксированные пределы
         },
       },
       plugins: {
@@ -68,13 +67,27 @@ function initChart() {
   });
 }
 
-// Функция обновления ячейки таблицы
+// Чтение параметров из полей ввода
+function getParams() {
+  return {
+    rho: parseFloat(rhoInput.value),
+    c: parseFloat(cInput.value),
+    lambda: parseFloat(lambdaInput.value),
+    L: parseFloat(LInput.value),
+    T0: parseFloat(T0Input.value),
+    Tleft: parseFloat(TleftInput.value),
+    Tright: parseFloat(TrightInput.value),
+    t_end: parseFloat(tEndInput.value),
+  };
+}
+
+// Обновление ячейки таблицы
 function setTableCell(tbody, rowIdx, colIdx, value, isTime = false) {
   const row = tbody.rows[rowIdx];
   if (!row) return;
-  const cell = row.cells[colIdx + 1]; // +1 потому что первый столбец — заголовок τ
+  const cell = row.cells[colIdx + 1];
   if (cell) {
-    cell.textContent = isTime ? value.toFixed(4) : value.toFixed(10);
+    cell.textContent = isTime ? value.toFixed(4) : value.toFixed(2);
     cell.classList.remove("empty");
   }
 }
@@ -95,69 +108,77 @@ function clearTables() {
       }
     }
   }
-  // Очистить график
   chart.data.datasets[0].data = [];
   chart.update();
 }
 
-// Метод прогонки (неявная схема) согласно формулам из методички
-function solveHeat(tau, h) {
+// Метод прогонки с параметрами
+function solveHeat(tau, h, params) {
+  const { rho, c, lambda, L, T0, Tleft, Tright, t_end } = params;
+
   const N = Math.floor(L / h) + 1; // число узлов сетки
   const nt = Math.ceil(t_end / tau); // число шагов по времени
 
-  // Коэффициенты (постоянные для всех внутренних узлов)
+  // Коэффициенты
   const A = lambda / (h * h);
   const C = A;
   const B = 2 * A + (rho * c) / tau;
 
-  // Массив температуры (текущий слой)
+  // Массив температуры
   let T = new Array(N).fill(T0);
   T[0] = Tleft;
   T[N - 1] = Tright;
 
-  // Прогоночные коэффициенты (для внутренних узлов i=1..N-2)
-  const alpha = new Array(N - 1); // будем использовать индексы от 0 до N-2, где alpha[i] соответствует α_{i+1}?
-  const beta = new Array(N - 1); // удобнее сделать размер N, но будем аккуратны.
-  // Чтобы соответствовать индексации из методички: α_i и β_i для i=1..N-2, где i – номер внутреннего узла.
-  // При i=1 используем α_0, β_0 из левого граничного условия.
-  // Введем alpha[0] и beta[0] для i=0 (фиктивные, соответствуют граничному условию)
+  // Прогоночные коэффициенты
+  const alpha = new Array(N - 1);
+  const beta = new Array(N - 1);
   alpha[0] = 0;
-  beta[0] = T[0]; // T_0 = α_0 * T_1 + β_0  => α_0=0, β_0=T_0
+  beta[0] = T[0];
 
-  // Цикл по времени
   for (let n = 0; n < nt; n++) {
-    // Формируем правую часть F_i для внутренних узлов i=1..N-2
-    const F = new Array(N - 1); // индекс i соответствует узлу i (1..N-2)
+    // Правая часть F_i
+    const F = new Array(N - 1);
     for (let i = 1; i <= N - 2; i++) {
       F[i] = -((rho * c) / tau) * T[i];
     }
 
-    // Прямая прогонка (вычисление α_i, β_i для i=1..N-2)
+    // Прямая прогонка
     for (let i = 1; i <= N - 2; i++) {
       const denom = B - C * alpha[i - 1];
       alpha[i] = A / denom;
       beta[i] = (C * beta[i - 1] - F[i]) / denom;
     }
 
-    // Обратная прогонка (вычисление T_i на новом слое)
-    // Сначала задаём правое граничное условие: T[N-1] = Tright
+    // Обратная прогонка
     T[N - 1] = Tright;
     for (let i = N - 2; i >= 1; i--) {
       T[i] = alpha[i] * T[i + 1] + beta[i];
     }
-    // T[0] уже задано граничным условием
     T[0] = Tleft;
   }
 
   return T;
 }
 
-// Основной обработчик расчёта
+// Обработчик расчёта
 document.getElementById("runBtn").addEventListener("click", function () {
   const tau = parseFloat(document.getElementById("tauSelect").value);
   const h = parseFloat(document.getElementById("hSelect").value);
+  const params = getParams();
 
-  // Получаем индексы для таблиц
+  // Проверка корректности параметров
+  for (let key in params) {
+    if (
+      isNaN(params[key]) ||
+      (params[key] <= 0 && key !== "Tleft" && key !== "Tright")
+    ) {
+      alert(
+        "Проверьте значения параметров (должны быть положительными числами).",
+      );
+      return;
+    }
+  }
+
   const rowIdx = tauIndices[tau];
   const colIdx = hIndices[h];
   if (rowIdx === undefined || colIdx === undefined) {
@@ -165,41 +186,18 @@ document.getElementById("runBtn").addEventListener("click", function () {
     return;
   }
 
-  // Предупреждение для очень мелких шагов
-  const warningDiv = document.getElementById("warning");
-  if (tau <= 0.0001 && h <= 0.0001) {
-    warningDiv.style.display = "block";
-    warningDiv.textContent =
-      "⚠️ Выбраны очень мелкие шаги (τ=0.0001, h=0.0001). Расчёт может занять несколько минут. Пожалуйста, подождите...";
-  } else if (tau <= 0.0001 || h <= 0.0001) {
-    warningDiv.style.display = "block";
-    warningDiv.textContent =
-      "⚠️ Выбран мелкий шаг. Расчёт может занять до минуты. Подождите...";
-  } else {
-    warningDiv.style.display = "none";
-  }
-
-  // Засекаем время
   const startTime = performance.now();
+  const T_profile = solveHeat(tau, h, params);
+  const elapsed = (performance.now() - startTime) / 1000;
 
-  // Выполняем расчёт
-  const T_profile = solveHeat(tau, h);
-
-  const elapsed = (performance.now() - startTime) / 1000; // в секундах
-
-  // Скрываем предупреждение после расчёта
-  warningDiv.style.display = "none";
-
-  // Находим температуру в центре пластины (индекс ближайший к середине)
   const N = T_profile.length;
   const centerIdx = Math.floor(N / 2);
   const T_center = T_profile[centerIdx];
 
-  // Обновляем таблицы
   setTableCell(tempTbody, rowIdx, colIdx, T_center, false);
   setTableCell(timeTbody, rowIdx, colIdx, elapsed, true);
 
-  // Обновляем график
+  // Обновление графика
   const xs = [];
   const ys = [];
   for (let i = 0; i < N; i++) {
@@ -207,13 +205,26 @@ document.getElementById("runBtn").addEventListener("click", function () {
     ys.push(T_profile[i]);
   }
   chart.data.datasets[0].data = xs.map((x, idx) => ({ x, y: ys[idx] }));
-  chart.data.datasets[0].label = `τ = ${tau} с, h = ${h} м, время счёта = ${elapsed.toFixed(3)} с`;
+  chart.data.datasets[0].label = `τ = ${tau} с, h = ${h} м, время = ${elapsed.toFixed(3)} с`;
   chart.update();
 });
 
-// Очистка
-document.getElementById("clearBtn").addEventListener("click", function () {
-  clearTables();
+// Очистка по кнопке
+document.getElementById("clearBtn").addEventListener("click", clearTables);
+
+// Сброс таблиц при изменении любого параметра (чтобы избежать несоответствия данных)
+const paramInputs = [
+  rhoInput,
+  cInput,
+  lambdaInput,
+  LInput,
+  T0Input,
+  TleftInput,
+  TrightInput,
+  tEndInput,
+];
+paramInputs.forEach((input) => {
+  input.addEventListener("input", clearTables);
 });
 
 // Инициализация
