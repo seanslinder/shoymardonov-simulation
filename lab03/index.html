@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лесные пожары (клеточный автомат)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Моделирование лесных пожаров</h1>
+      <!-- Панель параметров -->
+      <div class="params">
+        <!-- Группа параметров для лесного поля -->
+        <fieldset class="param-group">
+          <legend>Поле</legend>
+
+          <div class="param-item">
+            <label>Ширина (клеток)</label>
+            <input type="number" id="width" value="100" min="10" max="500" />
+          </div>
+          <div class="param-item">
+            <label>Высота (клеток)</label>
+            <input type="number" id="height" value="100" min="10" max="500" />
+          </div>
+          <div class="param-item">
+            <label>Начальная плотность</label>
+            <input
+              type="number"
+              id="density"
+              value="0.5"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+        </fieldset>
+        <!-- Группа параметров для вероятностей событий -->
+        <fieldset class="param-group">
+          <legend>Вероятности событий</legend>
+
+          <div class="param-item">
+            <label>Вероятность роста деревьев</label>
+            <input
+              type="number"
+              id="growProb"
+              value="0.01"
+              min="0"
+              max="1"
+              step="0.001"
+            />
+          </div>
+          <div class="param-item">
+            <label>Вероятность распростр. огня</label>
+            <input
+              type="number"
+              id="spreadProb"
+              value="0.5"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+          <div class="param-item">
+            <label>Вероятность молнии</label>
+            <input
+              type="number"
+              id="lightningProb"
+              value="0.001"
+              min="0"
+              max="1"
+              step="0.0001"
+            />
+          </div>
+        </fieldset>
+        <!-- Группа параметров для поведения ветра -->
+        <fieldset class="param-group">
+          <legend>Ветер</legend>
+
+          <div class="param-item">
+            <label>Направление ветра</label>
+            <select id="windDir">
+              <option value="none">Нет</option>
+              <option value="N">Север</option>
+              <option value="S">Юг</option>
+              <option value="W">Запад</option>
+              <option value="E">Восток</option>
+            </select>
+          </div>
+          <div class="param-item">
+            <label>Сила ветра</label>
+            <input
+              type="number"
+              id="windFactor"
+              value="2"
+              min="1"
+              max="10"
+              step="0.5"
+            />
+          </div>
+        </fieldset>
+        <!-- Группа параметров для управления симуляцией -->
+        <fieldset class="param-group">
+          <legend>Скорость симуляции</legend>
+
+          <div class="param-item">
+            <label>Скорость (мс)</label>
+            <input
+              type="number"
+              id="speed"
+              value="50"
+              min="10"
+              max="1000"
+              step="10"
+            />
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Панель управления симуляцией -->
+      <div class="controls">
+        <button id="startBtn" class="btn-primary">Старт</button>
+        <button id="pauseBtn" class="btn-secondary">Пауза</button>
+        <button id="stepBtn" class="btn-secondary">Шаг</button>
+        <button id="resetBtn" class="btn-secondary">Сброс</button>
+        <button id="saveBtn" class="btn-primary">Сохранить результат</button>
+        <button id="clearTableBtn" class="btn-secondary">
+          Очистить таблицу
+        </button>
+      </div>
+      <!-- Канвас для визуализации -->
+      <div class="canvas-container">
+        <canvas id="forestCanvas"></canvas>
+      </div>
+      <!-- Таблица для отображения результатов -->
+      <div class="table-container">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Ширина</th>
+              <th>Высота</th>
+              <th>Плотн.</th>
+              <th>Рост</th>
+              <th>Распространение</th>
+              <th>Ветер</th>
+              <th>Сила</th>
+              <th>Молния</th>
+              <th>Деревья %</th>
+              <th>Огонь %</th>
+              <th>Пусто %</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        Клеточный автомат с дополнительными правилами: ветер, молнии,
+        вероятностное распространение.
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
