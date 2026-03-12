@@ -165,7 +165,7 @@ function step() {
   const newGrid = [];
   for (let r = 0; r < rows; r++) newGrid[r] = new Array(cols);
 
-  // Основной цикл изменения состояний клеток
+  // Основной цикл изменения состояний
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const state = grid[r][c];
