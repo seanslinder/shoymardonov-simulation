@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа: Случайные события (собственный ГСЧ)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Моделирование случайных событий</h1>
+      <p class="description">
+        Приложения «Скажи “да” или “нет”» и «Шар предсказаний» на основе
+        реализованного генератора LCG.
+      </p>
+
+      <!-- Настройка генератора -->
+      <div class="generator-settings">
+        <div class="param-item">
+          <label>Зерно (seed) ГСЧ</label>
+          <input type="number" id="seed" value="12345" min="1" />
+        </div>
+        <button id="resetSeedBtn" class="btn-secondary">Сбросить ГСЧ</button>
+      </div>
+
+      <!-- Часть 1: Скажи "да" или "нет" -->
+      <div class="card">
+        <h2>🎲 Скажи "да" или "нет"</h2>
+        <p>Нажмите кнопку, чтобы получить случайный ответ "Да" или "Нет".</p>
+        <button id="yesNoBtn" class="btn-primary">Получить ответ</button>
+        <div id="yesNoResult" class="result">—</div>
+      </div>
+
+      <!-- Часть 2: Шар предсказаний (Magic 8-Ball) -->
+      <div class="card">
+        <h2>🔮 Шар предсказаний (Magic 8‑Ball)</h2>
+        <p>
+          Задайте вопрос, на который можно ответить "да" или "нет", и получите
+          предсказание.
+        </p>
+        <div class="input-group">
+          <input
+            type="text"
+            id="question"
+            placeholder="Например: Получится ли у меня лабораторная?"
+            maxlength="200"
+          />
+          <button id="askBtn" class="btn-primary">Спросить</button>
+        </div>
+        <div id="magicResult" class="result">
+          <div class="ball-placeholder">🎱</div>
+          <div class="answer-text">—</div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
