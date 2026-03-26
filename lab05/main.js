@@ -29,6 +29,7 @@ function resetRNG(seed) {
 // --- Часть 1: Скажи "да" или "нет" ---
 const yesNoBtn = document.getElementById("yesNoBtn");
 const yesNoResult = document.getElementById("yesNoResult");
+const yesNoProbInput = document.getElementById("yesNoProbability");
 
 function animateResult(element, newText) {
   if (!element) return;
@@ -48,7 +49,8 @@ if (yesNoBtn && yesNoResult) {
   let lastAnswer = null;
   yesNoBtn.addEventListener("click", () => {
     const random = getRandom();
-    const answer = random < 0.5 ? "Да" : "Нет";
+    const yesProbability = parseFloat(yesNoProbInput.value) || 0.5;
+    const answer = random < yesProbability ? "Да" : "Нет";
 
     // Если ответ не изменился, всё равно показываем анимацию
     if (answer === lastAnswer) {
@@ -92,8 +94,41 @@ const answers = [
 ];
 
 function getRandomAnswer() {
-  const idx = Math.floor(getRandom() * answers.length);
-  return answers[idx];
+  const random = getRandom();
+
+  // Получаем вероятности из инпутов
+  let posProb =
+    parseFloat(document.getElementById("answerPositiveProbability").value) ||
+    0.44;
+  let neuProb =
+    parseFloat(document.getElementById("answerNeutralProbability").value) ||
+    0.28;
+  let negProb =
+    parseFloat(document.getElementById("answerNegativeProbability").value) ||
+    0.28;
+
+  // Нормализуем вероятности, чтобы их сумма была 1
+  const totalProb = posProb + neuProb + negProb;
+  posProb = posProb / totalProb;
+  neuProb = neuProb / totalProb;
+  negProb = negProb / totalProb;
+
+  // Выбираем тип ответа на основе вероятностей
+  let answerType;
+  if (random < posProb) {
+    answerType = "positive";
+  } else if (random < posProb + neuProb) {
+    answerType = "neutral";
+  } else {
+    answerType = "negative";
+  }
+
+  // Получаем все ответы выбранного типа
+  const filteredAnswers = answers.filter((a) => a.type === answerType);
+
+  // Выбираем случайный ответ из найденных
+  const idx = Math.floor(getRandom() * filteredAnswers.length);
+  return filteredAnswers[idx];
 }
 
 function animateMagic8Ball(answer) {

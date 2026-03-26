@@ -32,6 +32,15 @@ h1 {
   align-items: flex-end;
   gap: 15px;
 }
+.param-group {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
 .param-item {
   display: flex;
   flex-direction: column;

@@ -27,6 +27,19 @@
       <div class="card">
         <h2>🎲 Скажи "да" или "нет"</h2>
         <p>Нажмите кнопку, чтобы получить случайный ответ "Да" или "Нет".</p>
+        <div class="param-group">
+          <div class="param-item">
+            <label>Вероятность "Да"</label>
+            <input
+              type="number"
+              id="yesNoProbability"
+              value="0.5"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+        </div>
         <button id="yesNoBtn" class="btn-primary">Получить ответ</button>
         <div id="yesNoResult" class="result">—</div>
       </div>
@@ -38,6 +51,41 @@
           Задайте вопрос, на который можно ответить "да" или "нет", и получите
           предсказание.
         </p>
+        <div class="param-group">
+          <div class="param-item">
+            <label>Вероятность положительного ответа</label>
+            <input
+              type="number"
+              id="answerPositiveProbability"
+              value="0.44"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+          <div class="param-item">
+            <label>Вероятность нейтрального ответа</label>
+            <input
+              type="number"
+              id="answerNeutralProbability"
+              value="0.28"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+          <div class="param-item">
+            <label>Вероятность отрицательного ответа</label>
+            <input
+              type="number"
+              id="answerNegativeProbability"
+              value="0.28"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+        </div>
         <div class="input-group">
           <input
             type="text"
