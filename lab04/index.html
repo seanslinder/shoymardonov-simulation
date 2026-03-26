@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Базовый датчик случайных чисел</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Лабораторная работа №4: Базовый датчик случайных чисел</h1>
+      <div class="params">
+        <div class="param-item">
+          <label>Размер выборки</label>
+          <input
+            type="number"
+            id="sampleSize"
+            value="100000"
+            min="1000"
+            max="1000000"
+            step="1000"
+          />
+        </div>
+        <div class="param-item">
+          <label>Зерно (seed)</label>
+          <input type="number" id="seed" value="12345" min="1" />
+        </div>
+      </div>
+      <div class="controls">
+        <button id="runBtn" class="btn-primary">
+          Сгенерировать и сравнить
+        </button>
+      </div>
+      <div class="stats-container">
+        <h3>Результаты</h3>
+        <table id="statsTable">
+          <thead>
+            <tr>
+              <th>Датчик</th>
+              <th>Выборочное среднее</th>
+              <th>Выборочная дисперсия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Реализованный</td>
+              <td class="mean-custom">—</td>
+              <td class="var-custom">—</td>
+            </tr>
+            <tr>
+              <td>Встроенный (Math.random)</td>
+              <td class="mean-builtin">—</td>
+              <td class="var-builtin">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="theoretical">
+          <strong
+            >Теоретические значения для равномерного распределения на
+            [0;1]:</strong
+          ><br />
+          Среднее: 0.5, Дисперсия: 1/12 ≈ 0.0833333333
+        </div>
+        <div id="conclusion" class="conclusion"></div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
