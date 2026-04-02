@@ -50,7 +50,7 @@ if (yesNoBtn && yesNoResult) {
   yesNoBtn.addEventListener("click", () => {
     const random = getRandom();
     const yesProbability = parseFloat(yesNoProbInput.value) || 0.5;
-    const answer = random < yesProbability ? "Да" : "Нет";
+    const answer = random <= yesProbability ? "Да" : "Нет";
 
     // Если ответ не изменился, всё равно показываем анимацию
     if (answer === lastAnswer) {
