@@ -119,6 +119,44 @@ function runDiscrete(n) {
         <strong>Статистика χ²:</strong> ${stats.chi2.toFixed(4)} (крит. 9.488)<br>
         <strong>Гипотеза о распределении:</strong> ${stats.hypothesis}${!stats.valid ? " (некоторые ожидаемые частоты <5, результат может быть ненадёжен)" : ""}
     `;
+
+  drawDiscreteChart(probs, stats.empProbs);
+}
+
+let discreteChartInstance = null;
+function drawDiscreteChart(theorProbs, empProbs) {
+  if (discreteChartInstance) discreteChartInstance.destroy();
+  const ctx = document.getElementById("discreteChart").getContext("2d");
+  discreteChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["1", "2", "3", "4", "5"],
+      datasets: [
+        {
+          label: "Эмпирическая вероятность",
+          data: empProbs,
+          backgroundColor: "rgba(54, 162, 235, 0.5)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+        {
+          label: "Теоретическая вероятность",
+          data: theorProbs,
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { title: { display: true, text: "Вероятность" }, beginAtZero: true },
+        x: { title: { display: true, text: "Значение" } },
+      },
+    },
+  });
 }
 
 // Нормальная СВ (Бокса-Мюллера)
@@ -202,8 +240,6 @@ function computeNormalStats(sample, mu, sigma, n) {
     const expected = n * p;
     if (expected >= 5) {
       chi2 += (bin.count - expected) ** 2 / expected;
-    } else {
-      // объединяем с соседними (упрощённо: если ожидание <5, не учитываем)
     }
   }
   const df = k - 3; // df = k-1 (интервалы) -2 (оценки параметров)
