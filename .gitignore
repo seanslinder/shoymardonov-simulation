@@ -1,2 +1,13 @@
 .DS_Store
 presentations/
+
+# Development Tools & VS Code
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MCP & AI agent logs
+.github/
+!mcp.json
+.feature-mcp/
