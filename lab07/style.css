@@ -1,0 +1,129 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+h1 {
+  color: #2c3e50;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+h2 {
+  font-size: 1.2rem;
+  color: #34495e;
+}
+.main-layout {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+.params-section {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+}
+.results-section {
+  flex: 1;
+}
+.matrix-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.matrix-inputs div {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.matrix-inputs input {
+  width: 60px;
+  padding: 4px;
+  margin-top: 4px;
+  margin-right: 10px;
+}
+.sim-params {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.param-item {
+  display: flex;
+  flex-direction: column;
+}
+.param-item label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #495057;
+}
+.param-item input, .param-item select {
+  padding: 6px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 120px;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-primary, .btn-secondary {
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-primary { background: #007bff; }
+.btn-primary:hover { background: #0056b3; }
+.btn-secondary { background: #6c757d; }
+.btn-secondary:hover { background: #5a6268; }
+
+.weather-box {
+  padding: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: #fff;
+  transition: background 0.3s;
+}
+.clear-weather { background: #f1c40f; color: #333; }
+.cloudy-weather { background: #95a5a6; }
+.overcast-weather { background: #34495e; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+table, th, td {
+  border: 1px solid #dee2e6;
+}
+th, td {
+  padding: 8px 12px;
+  text-align: right;
+}
+th {
+  background: #e9ecef;
+  text-align: center;
+}
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  margin-top: 20px;
+}

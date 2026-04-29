@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа №7: Моделирование погоды</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Имитационное моделирование смены погоды (Цепь Маркова)</h1>
+
+      <div class="main-layout">
+        <div class="params-section">
+          <h2>Интенсивности переходов (1 день)</h2>
+          <div class="matrix-inputs">
+            <div>
+              <strong>Из Ясно (1)</strong><br>
+              в Облачно: <input type="number" id="q12" value="0.4" step="0.1" min="0"><br>
+              в Пасмурно: <input type="number" id="q13" value="0.1" step="0.1" min="0">
+            </div>
+            <div>
+              <strong>Из Облачно (2)</strong><br>
+              в Ясно: <input type="number" id="q21" value="0.3" step="0.1" min="0"><br>
+              в Пасмурно: <input type="number" id="q23" value="0.5" step="0.1" min="0">
+            </div>
+            <div>
+              <strong>Из Пасмурно (3)</strong><br>
+              в Ясно: <input type="number" id="q31" value="0.1" step="0.1" min="0"><br>
+              в Облачно: <input type="number" id="q32" value="0.4" step="0.1" min="0">
+            </div>
+          </div>
+          
+          <div class="sim-params">
+            <div class="param-item">
+              <label>Время симуляции (дней)</label>
+              <input type="number" id="simTime" value="1000" min="10" />
+            </div>
+            <div class="param-item">
+              <label>Состояние старта</label>
+              <select id="startState">
+                <option value="0">Ясно</option>
+                <option value="1">Облачно</option>
+                <option value="2">Пасмурно</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="btnSimulate" class="btn-primary">Запустить мгновенно</button>
+            <button id="btnRealtime" class="btn-secondary">Анимация (1 день = 1с)</button>
+            <button id="btnReset" class="btn-secondary" style="background:#dc3545;">Сброс</button>
+            <button id="btnSaveCSV" class="btn-primary" style="background:#28a745;">Скачать CSV</button>
+          </div>
+        </div>
+
+        <div class="results-section">
+          <h2>Текущее состояние</h2>
+          <div id="weatherStatus" class="weather-box clear-weather">Ясно</div>
+          <div>Текущее время: <span id="currentDay">0 дней, 0 ч.</span></div>
+          
+          <h2>Статистика</h2>
+          <table id="statsTable">
+            <thead>
+              <tr>
+                <th>Состояние</th>
+                <th>Время (дни)</th>
+                <th>Эмп. вер.</th>
+                <th>Теор. вер.</th>
+                <th>Погрешность</th>
+              </tr>
+            </thead>
+            <tbody id="statsBody">
+              <!-- Заполняется в JS -->
+            </tbody>
+          </table>
+
+          <div class="chart-container">
+            <canvas id="weatherChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
