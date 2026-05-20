@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа №8: Пуассоновский поток</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Пуассоновский поток: события на сервере</h1>
+
+      <div class="main-layout">
+        <div class="params-section">
+          <h2>Параметры моделирования</h2>
+          <div class="sim-params">
+            <div class="param-item">
+              <label>Интенсивность λ (заявок/сек)</label>
+              <input type="number" id="lambda" value="2" step="0.1" min="0.01" />
+            </div>
+            <div class="param-item">
+              <label>Интервал T (сек)</label>
+              <input type="number" id="intervalT" value="5" step="0.5" min="0.1" />
+            </div>
+            <div class="param-item">
+              <label>Длительность симуляции (сек)</label>
+              <input type="number" id="simDuration" value="60" step="1" min="1" />
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="btnSimulate" class="btn-primary">Запустить симуляцию</button>
+            <button id="btnReset" class="btn-secondary">Сброс</button>
+          </div>
+
+          <div class="theory-box">
+            Теоретическое значение: μ = λT = <span id="theoryValue">-</span>
+          </div>
+        </div>
+
+        <div class="results-section">
+          <h2>Результаты</h2>
+          <div class="summary">
+            <div class="summary-item">
+              <span>Интервалов:</span>
+              <strong id="intervalsCount">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Заявок в последнем интервале T:</span>
+              <strong id="lastIntervalCount">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Среднее:</span>
+              <strong id="meanValue">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Дисперсия:</span>
+              <strong id="varianceValue">-</strong>
+            </div>
+          </div>
+
+          <h2>Число заявок по интервалам</h2>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Интервал</th>
+                  <th>Диапазон времени</th>
+                  <th>Заявок</th>
+                </tr>
+              </thead>
+              <tbody id="intervalBody"></tbody>
+            </table>
+          </div>
+
+          <h2>Распределение числа заявок</h2>
+          <div class="chart-container">
+            <canvas id="distributionChart"></canvas>
+          </div>
+
+          <h2>Вывод</h2>
+          <div id="conclusion" class="conclusion">
+            Запустите симуляцию, чтобы получить результаты.
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
