@@ -9,7 +9,8 @@ function expRandom(rate) {
 
 function runSimulation() {
     const lambda = parseFloat(document.getElementById('lambda').value);
-    let mu = parseFloat(document.getElementById('mu').value);
+    let mu_orig = parseFloat(document.getElementById('mu').value);
+    let mu = mu_orig;
     const T = parseFloat(document.getElementById('simDuration').value);
 
     if (lambda <= 0 || mu <= 0 || T <= 0) {
@@ -55,7 +56,9 @@ function runSimulation() {
                 served++;
                 
                 if (Math.random() < 0.10) {
-                    mu *= 2;
+                    mu = mu_orig * 2;
+                } else {
+                    mu = mu_orig;
                 }
                 
                 nextDeparture = time + expRandom(mu);
