@@ -9,7 +9,7 @@ function expRandom(rate) {
 
 function runSimulation() {
     const lambda = parseFloat(document.getElementById('lambda').value);
-    const mu = parseFloat(document.getElementById('mu').value);
+    let mu = parseFloat(document.getElementById('mu').value);
     const T = parseFloat(document.getElementById('simDuration').value);
 
     if (lambda <= 0 || mu <= 0 || T <= 0) {
@@ -17,24 +17,11 @@ function runSimulation() {
         return;
     }
 
-    // Теоретические показатели
-    const t_p0 = mu / (lambda + mu); // вероятность простоя
-    const t_p1 = lambda / (lambda + mu); // вероятность отказа
-    const t_Q = t_p0;
-    const t_A = lambda * t_Q;
-
-    document.getElementById('theoryP0').textContent = t_p0.toFixed(4);
-    document.getElementById('theoryP1').textContent = t_p1.toFixed(4);
-    document.getElementById('theoryQ').textContent = t_Q.toFixed(4);
-    document.getElementById('theoryA').textContent = t_A.toFixed(4);
-
-    // Инициализация симуляции
     let time = 0;
     
-    // 0 = idle, 1 = working
+    // 0 = простой, 1 = в работе
     let state = 0;
     
-    // Времена нахождения в состояниях
     let timeInState = [0, 0];
     let lastTime = 0;
 
@@ -44,8 +31,6 @@ function runSimulation() {
 
     let nextArrival = expRandom(lambda);
     let nextDeparture = Infinity;
-
-    const eventsLog = [];
 
     // Главный цикл событий
     while (time <= T) {
@@ -66,29 +51,21 @@ function runSimulation() {
             // Пришла заявка
             arrivals++;
             if (state === 0) {
-                // Сервер свободен
                 state = 1;
                 served++;
+                
+                if (Math.random() < 0.10) {
+                    mu *= 2;
+                }
+                
                 nextDeparture = time + expRandom(mu);
-                if (eventsLog.length < 20) {
-                    eventsLog.push({ t: time, type: 'Прибытие (обслуживается)', s: state });
-                }
             } else {
-                // Сервер занят -> отказ
                 rejected++;
-                if (eventsLog.length < 20) {
-                    eventsLog.push({ t: time, type: 'Прибытие (ОТКАЗ)', s: state });
-                }
             }
-            // Планируем следующую заявку
             nextArrival = time + expRandom(lambda);
         } else {
-            // Обслуживание завершено
             state = 0;
             nextDeparture = Infinity;
-            if (eventsLog.length < 20) {
-                eventsLog.push({ t: time, type: 'Окончание обслуживания', s: state });
-            }
         }
     }
 
@@ -96,86 +73,10 @@ function runSimulation() {
     const empP0 = timeInState[0] / T;
     const empP1 = timeInState[1] / T;
     const empRejectionRate = rejected / arrivals;
-    const empA = served / T;
 
-    document.getElementById('totalArrivals').textContent = arrivals;
-    document.getElementById('totalServed').textContent = served;
-    document.getElementById('totalRejected').textContent = rejected;
-
+    document.getElementById('empIdle').textContent = empP0.toFixed(4);
     document.getElementById('empRejection').textContent = empRejectionRate.toFixed(4);
-    document.getElementById('empA').textContent = empA.toFixed(4);
-
-    // Заполнение таблицы событий
-    const eventBody = document.getElementById('eventBody');
-    eventBody.innerHTML = '';
-    eventsLog.forEach(ev => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${ev.t.toFixed(4)}</td>
-            <td>${ev.type}</td>
-            <td>${ev.s}</td>
-        `;
-        eventBody.appendChild(tr);
-    });
-    if (eventsLog.length === 20) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td colspan="3" style="text-align: center;">... (показаны первые 20) ...</td>`;
-        eventBody.appendChild(tr);
-    }
-
-    // Вывод графика
-    updateChart(t_p0, t_p1, empP0, empP1);
-
-    // Формирование вывода
-    const conclusion = document.getElementById('conclusion');
-    const errRej = Math.abs(empRejectionRate - t_p1) / t_p1 * 100;
-    
-    conclusion.innerHTML = `
-        Симуляция успешно завершена.<br/>
-        Эмпирическая вероятность отказа составила <strong>${empRejectionRate.toFixed(4)}</strong>, 
-        что отличается от теоретического значения (${t_p1.toFixed(4)}) на <strong>${errRej.toFixed(2)}%</strong>.<br/>
-    `;
-}
-
-function updateChart(t0, t1, e0, e1) {
-    const ctx = document.getElementById('probChart').getContext('2d');
-    
-    if (probChart) {
-        probChart.destroy();
-    }
-
-    probChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['P0 (Свободен)', 'P1 (Занят / Отказ)'],
-            datasets: [
-                {
-                    label: 'Теоретическая вероятность',
-                    data: [t0, t1],
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Эмпирическая вероятность',
-                    data: [e0, e1],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 1
-                }
-            }
-        }
-    });
+    document.getElementById('empBusy').textContent = empP1.toFixed(4);
 }
 
 function resetSimulation() {
@@ -183,20 +84,8 @@ function resetSimulation() {
     document.getElementById('mu').value = 4;
     document.getElementById('simDuration').value = 100;
 
-    ['theoryP0', 'theoryP1', 'theoryQ', 'theoryA', 
-     'totalArrivals', 'totalServed', 'totalRejected', 
-     'empRejection', 'empA'].forEach(id => {
+    ['empIdle', 'empRejection', 'empBusy'].forEach(id => {
         document.getElementById(id).textContent = '-';
     });
-
-    document.getElementById('eventBody').innerHTML = '';
-    document.getElementById('conclusion').innerHTML = 'Запустите симуляцию, чтобы получить результаты.';
-
-    if (probChart) {
-        probChart.destroy();
-        probChart = null;
-    }
 }
 
-// Запустим 1 раз при старте
-// runSimulation(); 

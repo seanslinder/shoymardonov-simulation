@@ -34,62 +34,23 @@
             <button id="btnReset" class="btn-secondary">Сброс</button>
           </div>
 
-          <div class="theory-box">
-            <strong>Теоретические значения:</strong><br/>
-            Вероятность простоя P₀ = <span id="theoryP0">-</span><br/>
-            Вероятность отказа P.отк = <span id="theoryP1">-</span><br/>
-            Отн. пропускная способность Q = <span id="theoryQ">-</span><br/>
-            Абс. пропускная способность A = <span id="theoryA">-</span>
-          </div>
         </div>
 
         <div class="results-section">
           <h2>Результаты</h2>
           <div class="summary">
             <div class="summary-item">
-              <span>Всего заявок:</span>
-              <strong id="totalArrivals">-</strong>
+              <span>Эмпир. вероятность простоя:</span>
+              <strong id="empIdle">-</strong>
             </div>
             <div class="summary-item">
-              <span>Обслужено:</span>
-              <strong id="totalServed">-</strong>
-            </div>
-            <div class="summary-item">
-              <span>Отклонено (отказы):</span>
-              <strong id="totalRejected">-</strong>
+              <span>Эмпир. вероятность занятости:</span>
+              <strong id="empBusy">-</strong>
             </div>
             <div class="summary-item">
               <span>Эмпир. вероятность отказа:</span>
               <strong id="empRejection">-</strong>
             </div>
-            <div class="summary-item">
-              <span>Эмпир. абс. пропускная (A):</span>
-              <strong id="empA">-</strong>
-            </div>
-          </div>
-
-          <h2>Динамика состояний (первые 20 событий)</h2>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Время</th>
-                  <th>Событие</th>
-                  <th>Состояние (0=свободен)</th>
-                </tr>
-              </thead>
-              <tbody id="eventBody"></tbody>
-            </table>
-          </div>
-
-          <h2>Вероятности состояний</h2>
-          <div class="chart-container">
-            <canvas id="probChart"></canvas>
-          </div>
-
-          <h2>Вывод</h2>
-          <div id="conclusion" class="conclusion">
-            Запустите симуляцию, чтобы получить результаты.
           </div>
         </div>
       </div>
