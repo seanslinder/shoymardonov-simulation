@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа №10: СМО с усложнениями</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Многомодульная СМО с очередью и нетерпеливыми заявками (ООП)</h1>
+
+      <div class="main-layout">
+        <div class="params-section">
+          <h2>Параметры моделирования</h2>
+          <div class="sim-params">
+            <div class="param-item">
+              <label>Интенсивность поступления λ (заявок/ед.вр)</label>
+              <input type="number" id="lambda" value="5" step="0.5" min="0.1" />
+            </div>
+            <div class="param-item">
+              <label>Интенсивность обслуживания μ (на 1 прибор)</label>
+              <input type="number" id="mu" value="3" step="0.5" min="0.1" />
+            </div>
+            <div class="param-item">
+              <label>Количество приборов (каналов), c</label>
+              <input type="number" id="channels" value="2" step="1" min="1" />
+            </div>
+            <div class="param-item">
+              <label>Макс. длина очереди, K</label>
+              <input type="number" id="queueCap" value="10" step="1" min="0" />
+            </div>
+            <div class="param-item">
+              <label>Интенсивность ухода γ (нетерпеливость)</label>
+              <input type="number" id="gamma" value="1" step="0.1" min="0" />
+            </div>
+            <div class="param-item">
+              <label>Длительность симуляции T</label>
+              <input type="number" id="simDuration" value="200" step="10" min="10" />
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="btnSimulate" class="btn-primary">Запустить симуляцию</button>
+            <button id="btnReset" class="btn-secondary">Сброс</button>
+          </div>
+
+          <div class="theory-box">
+            <strong>Правила (усложнения):</strong><br/>
+            1. Наличие ограниченной очереди (K мест).<br/>
+            2. Нетерпеливые заявки (интенсивность ухода γ).<br/>
+            При γ = 0 заявки стоят до победного.
+          </div>
+        </div>
+
+        <div class="results-section">
+          <h2>Результаты</h2>
+          <div class="summary">
+            <div class="summary-item">
+              <span>Всего заявок:</span>
+              <strong id="resTotal">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Обслужено:</span>
+              <strong id="resServed">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Отказов (нет мест):</span>
+              <strong id="resRejected">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Ушло (не дождались):</span>
+              <strong id="resAbandoned">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Отн. пропускная способность:</span>
+              <strong id="resQ">-</strong>
+            </div>
+            <div class="summary-item">
+              <span>Среднее время в очереди:</span>
+              <strong id="resWq">-</strong>
+            </div>
+          </div>
+
+          <h2>Динамика состояний (первые 30 событий)</h2>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Время</th>
+                  <th>Тип события</th>
+                  <th>Заявка</th>
+                  <th>Состояние (Приборы / Очередь)</th>
+                </tr>
+              </thead>
+              <tbody id="eventBody"></tbody>
+            </table>
+          </div>
+
+          <h2>Итоги по заявкам</h2>
+          <div class="chart-container">
+            <canvas id="outcomeChart"></canvas>
+          </div>
+
+          <h2>Вывод</h2>
+          <div id="conclusion" class="conclusion">
+            Запустите симуляцию, чтобы получить результаты.
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
